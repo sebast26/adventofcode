@@ -40,11 +40,32 @@ func computeNumberOfIncreases(measurements []int) int {
 	return count
 }
 
+func computeSlidingWindowIncreases(measurements []int, slidingWindowSize int) int {
+	prevSum := 0
+	for i := 0; i < slidingWindowSize; i++ {
+		prevSum += measurements[i]
+	}
+
+	tempSum := prevSum
+	count := 0
+	for i := slidingWindowSize; i < len(measurements); i++ {
+		tempSum = tempSum - measurements[i-slidingWindowSize] + measurements[i]
+		if tempSum > prevSum {
+			count++
+		}
+		prevSum = tempSum
+	}
+	return count
+}
+
 func main() {
 	measurements, err := readInput("01a.input")
 	if err != nil {
 		log.Fatalln("error when reading file")
 	}
 	increases := computeNumberOfIncreases(measurements)
-	fmt.Printf("the number of times a depth measurement increases: %d", increases)
+	fmt.Printf("the number of times a depth measurement increases: %d\n", increases)
+
+	slidingIncreases := computeSlidingWindowIncreases(measurements, 3)
+	fmt.Printf("the number of times a depth measurement increases in 3: %d\n", slidingIncreases)
 }
