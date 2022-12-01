@@ -18,13 +18,10 @@ func main() {
 	scanner := bufio.NewScanner(in)
 
 	var cal []int
-	var max, current int
+	var current int
 	for scanner.Scan() {
 		line := strings.Trim(scanner.Text(), " \n\r\t")
 		if line == "" {
-			if current > max {
-				max = current
-			}
 			cal = append(cal, current)
 			current = 0
 			continue
