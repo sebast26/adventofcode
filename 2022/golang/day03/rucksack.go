@@ -1,6 +1,7 @@
 package main
 
 import (
+	"sgorecki.me/adventofcode/2022/common"
 	"strings"
 )
 
@@ -26,12 +27,8 @@ func (r Rucksack) Compartment(num int) string {
 func (r Rucksack) CommonItem() rune {
 	c1 := r.Compartment(1)
 	c2 := r.Compartment(2)
-	for i := range c1 {
-		if strings.IndexRune(c2, rune(c1[i])) != -1 {
-			return rune(c1[i])
-		}
-	}
-	return 0
+	chars := common.CommonCharacters([]string{c1, c2})
+	return chars[0]
 }
 
 func Priority(r rune) int {
