@@ -14,10 +14,19 @@ func main() {
 	defer in.Close()
 
 	scanner := bufio.NewScanner(in)
-	var total int
+	var total, totalGroup int
+	var group []string
 	for scanner.Scan() {
-		rs := NewRucksack(scanner.Text())
+		line := scanner.Text()
+		rs := NewRucksack(line)
 		total += Priority(rs.CommonItem())
+		group = append(group, line)
+		if len(group) == 3 {
+			gr := NewGroup(group)
+			totalGroup += Priority(gr.CommonItem())
+			group = make([]string, 0)
+		}
 	}
 	fmt.Println(total)
+	fmt.Println(totalGroup)
 }
