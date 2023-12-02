@@ -1,11 +1,10 @@
 module Main where
 
-import qualified MyLib (someFunc)
-import qualified Day01 (add)
+import qualified Day01 (calibrationValue)
 
 main :: IO ()
 main = do
-  putStrLn "Hello, Haskell!"
-  let sum = Day01.add 1 2
-  MyLib.someFunc
-  print sum
+  contents <- readFile "inputs/01a"
+  let calibrationLines = lines contents
+      calibrationValues = map (Day01.calibrationValue) calibrationLines
+  print $ sum calibrationValues

@@ -60,7 +60,6 @@ library
 
     -- Modules exported by the library.
     exposed-modules: 
-        MyLib,
         Day01
 
     -- Modules included in this library but not exported.
