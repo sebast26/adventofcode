@@ -2,7 +2,7 @@
   "name": "DevContainer for Haskell (GHC, Stack, Cabal, HIE, LSP, DAP, etc.)",
   "remoteUser": "vscode",
   "runArgs": [],
-  "image": "dev_haskell:1",
+  "image": "dev_haskell:8.10.7",
   "customizations": {
     "vscode": {
       "extensions": [

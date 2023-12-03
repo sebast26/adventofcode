@@ -2,7 +2,7 @@ FROM debian:bullseye-slim as base
 
 ENV LANG C.UTF-8
 
-ARG GHC_VERSION=9.4.4
+ARG GHC_VERSION=8.10.7
 ARG STACK_VERSION=recommended
 ARG STACK_RESOLVER=default
 ARG CABAL_VERSION=recommended
@@ -59,7 +59,7 @@ RUN cabal user-config update -f && \
     sed -i 's/-- ghc-options:/ghc-options: -haddock/g' ~/.cabal/config
 
 # Install stack
-RUN ghcup install stack ${STACK_VERSION} --set
+#RUN ghcup install stack ${STACK_VERSION} --set
 
 # Set system-ghc, install-ghc and resolver for stack.
 # RUN ((stack ghc -- --version 2>/dev/null) || true) && \
@@ -70,7 +70,7 @@ RUN ghcup install stack ${STACK_VERSION} --set
 #     stack config --system-ghc set resolver ${STACK_RESOLVER}
 
 # Set global custom defaults for stack.
-RUN printf "ghc-options:\n  \"\$everything\": -haddock\n" >> /home/${USERNAME}/.stack/config.yaml
+# RUN printf "ghc-options:\n  \"\$everything\": -haddock\n" >> /home/${USERNAME}/.stack/config.yaml
 
 # Install hls
 RUN ghcup install hls ${HLS_VERSION} --set
@@ -79,16 +79,16 @@ FROM tooling as packages
 
 # Install global packages.
 # Versions are pinned, since we don't want to accidentally break anything (by always installing latest).
-RUN cabal install --haddock-hoogle \
+# RUN cabal install --haddock-hoogle \
 #    fsnotify-0.3.0.1 \
-    haskell-dap-0.0.16.0 \
-    ghci-dap-0.0.20.0 \
-    haskell-debug-adapter-0.0.39.0 \
-    hlint-3.5 \
-    apply-refact-0.11.0.0 \
-    retrie-1.2.1.1 \
-    hoogle-5.0.18.3 \
-    ormolu-0.5.2.0
+#    haskell-dap-0.0.16.0 \
+#    ghci-dap-0.0.20.0 \
+#    haskell-debug-adapter-0.0.39.0 \
+#    hlint-3.5 \
+#    apply-refact-0.11.0.0 \
+#    retrie-1.2.1.1 \
+#    hoogle-5.0.18.3 \
+#    ormolu-0.5.2.0
 
 #FROM packages as hoogle
 
