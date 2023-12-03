@@ -60,7 +60,8 @@ library
 
     -- Modules exported by the library.
     exposed-modules: 
-        Day01
+        Day01,
+        Day02
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -69,7 +70,10 @@ library
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.17.0.0
+    build-depends:    
+        base ^>=4.14.0.0,
+        parse,
+        MissingH ^>=1.6.0.0
 
     -- Directories containing source files.
     hs-source-dirs:   src
@@ -92,7 +96,7 @@ executable haskell
 
     -- Other library packages from which modules are imported.
     build-depends:
-        base ^>=4.17.0.0,
+        base ^>=4.14.0.0,
         haskell
 
     -- Directories containing source files.
@@ -125,5 +129,5 @@ test-suite haskell-test
 
     -- Test dependencies.
     build-depends:
-        base ^>=4.17.0.0,
+        base ^>=4.14.0.0,
         haskell
