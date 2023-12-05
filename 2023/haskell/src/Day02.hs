@@ -41,16 +41,6 @@ possibleSet = foldl (\acc x -> acc && possibleCubes x) True
 possibleGame :: Game -> Bool
 possibleGame g = foldl (\acc x -> acc && possibleSet x) True $ sets g 
 
--- fewestSet :: [Set] -> Set
--- fewestSet s = [(Red, r), (Green, g), (Blue, b)]
-    -- where sets = concat s
-        -- fb1 = filter (\x -> fst x == Blue) s1 
-        --   fb2 = filter (\x -> fst x == Blue) s2
-        --   fr1 = filter (\x -> fst x == Red) s1
-        --   fr2 = filter (\x -> fst x == Red) s2
-        --   fg1 = filter (\x -> fst x == Green) s1
-        --   fg2 = filter (\x -> fst x == Green) s2
-
 minimumSet :: Game -> Set
 minimumSet g = [(Red, maxR), (Green, maxG), (Blue, maxB)]
     where cubes = concat $ sets g

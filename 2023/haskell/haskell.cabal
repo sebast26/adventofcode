@@ -61,7 +61,8 @@ library
     -- Modules exported by the library.
     exposed-modules: 
         Day01,
-        Day02
+        Day02,
+        Day03
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -73,7 +74,8 @@ library
     build-depends:    
         base ^>=4.14.0.0,
         parse,
-        MissingH ^>=1.6.0.0
+        MissingH ^>=1.6.0.0,
+        containers 
 
     -- Directories containing source files.
     hs-source-dirs:   src
