@@ -2,7 +2,7 @@ module Main where
 
 import qualified Day01 (calibrationValue, realCalibrationValue)
 import qualified Day02 (toGame, possibleGame, gameId, minimumSet, setProduct)
-import qualified Day03 (parseSchematic)
+import qualified Day03 (parseSchematic, engineLineNumbers)
 
 main :: IO ()
 main = do
@@ -23,4 +23,6 @@ main = do
   print $ sum a
   contents03 <- readFile "inputs/03a"
   let schematic = Day03.parseSchematic $ lines contents03
-  print schematic
+      engineNumbers = Day03.engineLineNumbers schematic
+      s = sum $ map sum engineNumbers
+  print s
