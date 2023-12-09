@@ -3,7 +3,7 @@ module Main where
 import qualified Day01 (calibrationValue, realCalibrationValue)
 import qualified Day02 (toGame, possibleGame, gameId, minimumSet, setProduct)
 import qualified Day03 (parseSchematic, engineLineNumbers, gearNumbers)
-import qualified Day04 (parseCard, won)
+import qualified Day04 (parseCard, won, scratchCardsWon, countCards)
 
 main :: IO ()
 main = do
@@ -34,4 +34,7 @@ main = do
   let cards = map Day04.parseCard $ lines content04
       cardsValue = filter (not . null) $ map Day04.won cards
       s = sum $ map (\won -> 2 ^ (length won - 1)) cardsValue
+      wonCards = map Day04.scratchCardsWon cards
+      countSum = sum $ Day04.countCards wonCards
   print $ "Day04 part 1: " ++ show s
+  print $ "Day04 part 2: " ++ show countSum
