@@ -4,7 +4,9 @@ import qualified Day01 (calibrationValue, realCalibrationValue)
 import qualified Day02 (toGame, possibleGame, gameId, minimumSet, setProduct)
 import qualified Day03 (parseSchematic, engineLineNumbers, gearNumbers)
 import qualified Day04 (parseCard, won, scratchCardsWon, countCards)
-import qualified Day05 (readSeeds, readMapEntry, almanac, seedToLocation)
+import qualified Day05 (readSeeds, readMapEntry, almanac, seedToLocation, rangesOfSeeds, seedsFromRanges)
+import Data.Ix (Ix(range))
+import Data.List (foldl', foldl1')
 
 main :: IO ()
 main = do
@@ -66,4 +68,15 @@ main = do
         h2l = map Day05.readMapEntry $ lines h2lContent
         alm = Day05.almanac seeds s2s s2f f2w w2l l2t t2h h2l
         locations = map (Day05.seedToLocation alm) seeds 
+        ranges = Day05.rangesOfSeeds seeds 
+        newSeeds = concat $ Day05.seedsFromRanges ranges
+        alm2 = Day05.almanac newSeeds s2s s2f f2w w2l l2t t2h h2l 
+        -- newLocations = minimum $ map (Day05.seedToLocation alm2) newSeeds
+        -- minLocation = foldl' (\acc x -> if x < acc then x else acc) 10000000000 $ map (Day05.seedToLocation alm2) newSeeds
+        -- m = foldl1' min $ map (Day05.seedToLocation alm2) newSeeds
+        m = foldl' (\acc x -> do
+                let loc = Day05.seedToLocation alm2 x
+                if loc < acc then loc else acc
+            ) 1000000000 newSeeds
   print $ "Day05 part 1: " ++ show (minimum locations)
+  print $ "Day05 part 2: " ++ show m

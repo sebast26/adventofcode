@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use head" #-}
-module Day05 (readSeeds, readMapEntry, almanac, seedToLocation) where
+module Day05 (readSeeds, readMapEntry, almanac, seedToLocation, rangesOfSeeds, seedsFromRanges) where
 
 data Almanac = Almanac  { seeds :: [Int]
                         , seedToSoil :: [(Int, Int, Int)]
@@ -16,13 +16,13 @@ almanac :: [Int] -> [(Int, Int, Int)] -> [(Int, Int, Int)] -> [(Int, Int, Int)] 
 almanac = Almanac
 
 seedToLocation :: Almanac -> Int -> Int
-seedToLocation alm seed = findMapping alm humidityToLocation hum
-    where   soil = findMapping alm seedToSoil seed
-            fert = findMapping alm soilToFertilizer soil
-            water = findMapping alm fertilizerToWater fert
-            light = findMapping alm waterToLight water
-            temp = findMapping alm lightToTemperature light
-            hum = findMapping alm temperatureToHumidity temp
+seedToLocation alm seed = findMapping (humidityToLocation alm) hum
+    where   soil = findMapping (seedToSoil alm) seed
+            fert = findMapping (soilToFertilizer alm) soil
+            water = findMapping (fertilizerToWater alm) fert
+            light = findMapping (waterToLight alm) water
+            temp = findMapping (lightToTemperature alm) light
+            hum = findMapping (temperatureToHumidity alm)  temp
 
 dstRangeStart :: (a, b, c) -> a
 dstRangeStart (x, _, _) = x
@@ -40,9 +40,9 @@ readMapEntry :: [Char] -> (Int, Int, Int)
 readMapEntry str = (nums !! 0, nums !! 1, nums !! 2)
     where nums = map (\x -> read x :: Int) $ words str
 
-findMapping :: Almanac -> (Almanac -> [(Int, Int, Int)]) -> Int -> Int
-findMapping alm fn key = if valuesFiltered /= [] then head valuesFiltered else key
-    where   values = map (mapping key) $ fn alm
+findMapping :: [(Int, Int, Int)] -> Int -> Int
+findMapping mapEntries key = if valuesFiltered /= [] then head valuesFiltered else key
+    where   values = map (mapping key) mapEntries 
             valuesFiltered = filter (/= key) values 
             
 mapping :: Int -> (Int, Int, Int) -> Int
@@ -53,3 +53,12 @@ mapping i mapEntry
             rangeLen = rangeLength mapEntry
             dstStart = dstRangeStart mapEntry
             diff = i - srcStart
+
+rangesOfSeeds :: Num b => [b] -> [(b, b)]
+rangesOfSeeds [] = []
+rangesOfSeeds [_] = []
+rangesOfSeeds (x:y:xs) = (x, x+y) : rangesOfSeeds xs 
+
+seedsFromRanges :: Enum a => [(a, a)] -> [[a]]
+seedsFromRanges [] = []
+seedsFromRanges ((s, e):xs) = [s..e] : seedsFromRanges xs
