@@ -5,6 +5,7 @@ import qualified Day02 (toGame, possibleGame, gameId, minimumSet, setProduct)
 import qualified Day03 (parseSchematic, engineLineNumbers, gearNumbers)
 import qualified Day04 (parseCard, won, scratchCardsWon, countCards)
 import qualified Day05 (readSeeds, readMapEntry, almanac, seedToLocation, rangesOfSeeds, seedsFromRanges)
+import qualified Day06 (race, simulations, wonSims)
 import Data.Ix (Ix(range))
 import Data.List (foldl', foldl1')
 
@@ -60,23 +61,35 @@ main = do
   h2lContent <- readFile "inputs/05h2l"
   let   seeds = Day05.readSeeds "2637529854 223394899 3007537707 503983167 307349251 197383535 3543757609 276648400 2296792159 141010855 116452725 5160533 2246652813 49767336 762696372 160455077 3960442213 105867001 1197133308 38546766"
         s2s = map Day05.readMapEntry $ lines s2sContent
-        s2f = map Day05.readMapEntry $ lines s2fContent 
+        s2f = map Day05.readMapEntry $ lines s2fContent
         f2w = map Day05.readMapEntry $ lines f2wContent
         w2l = map Day05.readMapEntry $ lines w2lContent
         l2t = map Day05.readMapEntry $ lines l2tContent
         t2h = map Day05.readMapEntry $ lines t2hContent
         h2l = map Day05.readMapEntry $ lines h2lContent
         alm = Day05.almanac seeds s2s s2f f2w w2l l2t t2h h2l
-        locations = map (Day05.seedToLocation alm) seeds 
-        ranges = Day05.rangesOfSeeds seeds 
+        locations = map (Day05.seedToLocation alm) seeds
+        ranges = Day05.rangesOfSeeds seeds
         newSeeds = concat $ Day05.seedsFromRanges ranges
-        alm2 = Day05.almanac newSeeds s2s s2f f2w w2l l2t t2h h2l 
-        -- newLocations = minimum $ map (Day05.seedToLocation alm2) newSeeds
-        -- minLocation = foldl' (\acc x -> if x < acc then x else acc) 10000000000 $ map (Day05.seedToLocation alm2) newSeeds
-        -- m = foldl1' min $ map (Day05.seedToLocation alm2) newSeeds
-        m = foldl' (\acc x -> do
-                let loc = Day05.seedToLocation alm2 x
-                if loc < acc then loc else acc
-            ) 1000000000 newSeeds
+        alm2 = Day05.almanac newSeeds s2s s2f f2w w2l l2t t2h h2l
+        -- we skip this for later `cabal run`s, since it takes some time to compute these
+        -- m = foldl' (\acc x -> do
+        --        let loc = Day05.seedToLocation alm2 x
+        --        if loc < acc then loc else acc
+        --    ) 1000000000 newSeeds
   print $ "Day05 part 1: " ++ show (minimum locations)
-  print $ "Day05 part 2: " ++ show m
+  -- print $ "Day05 part 2: " ++ show m
+
+  let   r1 = Day06.race(40, 219)
+        r2 = Day06.race(81, 1012)
+        r3 = Day06.race(77, 1365)
+        r4 = Day06.race(72, 1089)
+        races = [r1, r2, r3, r4]
+        sims = map Day06.simulations races
+        won = zipWith Day06.wonSims races sims
+        result = foldl (\acc x -> length x * acc) 1 won
+        bigRace = Day06.race(40817772, 219101213651089)
+        sim = Day06.simulations $ bigRace
+        result2 = length $ Day06.wonSims bigRace sim
+  print $ "Day06 part 1: " ++ show result
+  print $ "Day06 part 2: " ++ show result2
