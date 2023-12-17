@@ -6,8 +6,11 @@ import qualified Day03 (parseSchematic, engineLineNumbers, gearNumbers)
 import qualified Day04 (parseCard, won, scratchCardsWon, countCards)
 import qualified Day05 (readSeeds, readMapEntry, almanac, seedToLocation, rangesOfSeeds, seedsFromRanges)
 import qualified Day06 (race, simulations, wonSims)
+import qualified Day07 (parseLine)
 import Data.Ix (Ix(range))
-import Data.List (foldl', foldl1')
+import Data.List (foldl', foldl1', sort)
+import Day07 (HandBid(bid))
+import GHC.Read (readField)
 
 main :: IO ()
 main = do
@@ -93,3 +96,10 @@ main = do
         result2 = length $ Day06.wonSims bigRace sim
   print $ "Day06 part 1: " ++ show result
   print $ "Day06 part 2: " ++ show result2
+
+  content07test <- readFile "inputs/07test"
+  content07 <- readFile "inputs/07a"
+  let   handBids = map Day07.parseLine $ lines content07
+        sortedHB = sort handBids
+        res = sum $ zipWith (\ hb idx -> idx * bid hb) sortedHB [1..]
+  print $ "Day07 part 1: " ++ show res

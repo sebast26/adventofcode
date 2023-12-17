@@ -65,7 +65,8 @@ library
         Day03,
         Day04,
         Day05,
-        Day06
+        Day06,
+        Day07
 
     -- Modules included in this library but not exported.
     -- other-modules:
@@ -78,7 +79,8 @@ library
         base ^>=4.14.0.0,
         parse,
         MissingH ^>=1.6.0.0,
-        containers 
+        containers,
+        general-games ^>=1.1.1
 
     -- Directories containing source files.
     hs-source-dirs:   src
