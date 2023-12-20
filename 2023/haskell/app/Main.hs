@@ -8,9 +8,10 @@ import qualified Day05 (readSeeds, readMapEntry, almanac, seedToLocation, ranges
 import qualified Day06 (race, simulations, wonSims)
 import qualified Day07 (parseLine)
 import Data.Ix (Ix(range))
-import Data.List (foldl', foldl1', sort)
+import Data.List (foldl', foldl1', sort, intercalate)
 import Day07 (HandBid(bid), parseJLine)
 import GHC.Read (readField)
+import qualified Day08 ( parseInstructions, parseMap, routeZZZ )
 
 main :: IO ()
 main = do
@@ -107,3 +108,10 @@ main = do
         resP2 = sum $ zipWith (\hb idx -> idx * bid hb) sortedHBP2 [1..]
   print $ "Day07 part 1: " ++ show res
   print $ "Day07 part 2: " ++ show resP2
+
+  content08 <- readFile "inputs/08a"
+  let   instructions = "LRLRRLRLRRRLRRRLRRLRLLRLRLRRRLRLRRLLRRLLRRRLLRRRLRRRLRRLLRLRRRLRRLRLRLLRRLLRRRLLRLRRRLRRRLLRLRRRLLRLLRRLRLRRRLLRLRLLRRRLLRLRRRLLLRRRLLLRRLLLRRRLLRLRLRLRRLLRRRLRRLRRRLRRLRRRLRLRRLRLRRRLRLRRRLRRLRRRLRLLLRLRRRLRLLRLRRLRRRLRRLRLRLRLRRLRRLLRLLLRLRLRRRLRRRLLRLLRLRRLRRRLRRLRRRLRLRRRR"
+        rInstructions = intercalate "" $ replicate 1000000 instructions
+        i = Day08.parseInstructions rInstructions
+        m = Day08.parseMap content08
+  print $ "Day08 part 1: " ++ show (Day08.routeZZZ m i)
