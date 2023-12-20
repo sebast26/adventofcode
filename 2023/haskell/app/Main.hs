@@ -9,7 +9,7 @@ import qualified Day06 (race, simulations, wonSims)
 import qualified Day07 (parseLine)
 import Data.Ix (Ix(range))
 import Data.List (foldl', foldl1', sort)
-import Day07 (HandBid(bid))
+import Day07 (HandBid(bid), parseJLine)
 import GHC.Read (readField)
 
 main :: IO ()
@@ -102,4 +102,8 @@ main = do
   let   handBids = map Day07.parseLine $ lines content07
         sortedHB = sort handBids
         res = sum $ zipWith (\ hb idx -> idx * bid hb) sortedHB [1..]
+        handBidsP2 = map Day07.parseJLine $ lines content07
+        sortedHBP2 = sort handBidsP2
+        resP2 = sum $ zipWith (\hb idx -> idx * bid hb) sortedHBP2 [1..]
   print $ "Day07 part 1: " ++ show res
+  print $ "Day07 part 2: " ++ show resP2
