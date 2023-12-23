@@ -26,3 +26,14 @@ routeZZZ' m instList step currentNode
     where   tup = m Map.! currentNode
             command = head instList
             nextNode = command tup
+
+startingNodes :: Map.Map String (String, String) -> [String]
+startingNodes m = filter (\x -> last x == 'A') $ Map.keys m
+
+endingNodes :: Foldable t => t [Char] -> Bool
+endingNodes = all (\x -> last x == 'Z')
+
+routeXXZ :: Num t => Map.Map [Char] b -> [b -> [Char]] -> t -> [[Char]] -> t
+routeXXZ m instList step nodes
+    | endingNodes nodes = step
+    | otherwise = routeXXZ m (tail instList) (step+1) $ map (head instList . (m Map.!)) nodes

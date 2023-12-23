@@ -11,7 +11,7 @@ import Data.Ix (Ix(range))
 import Data.List (foldl', foldl1', sort, intercalate)
 import Day07 (HandBid(bid), parseJLine)
 import GHC.Read (readField)
-import qualified Day08 ( parseInstructions, parseMap, routeZZZ, routeZZZ' )
+import qualified Day08 ( parseInstructions, parseMap, routeZZZ, routeZZZ', startingNodes, routeXXZ )
 
 main :: IO ()
 main = do
@@ -110,7 +110,14 @@ main = do
   print $ "Day07 part 2: " ++ show resP2
 
   content08 <- readFile "inputs/08a"
+  content08btest <- readFile "inputs/08btest"
   let   instructions = "LRLRRLRLRRRLRRRLRRLRLLRLRLRRRLRLRRLLRRLLRRRLLRRRLRRRLRRLLRLRRRLRRLRLRLLRRLLRRRLLRLRRRLRRRLLRLRRRLLRLLRRLRLRRRLLRLRLLRRRLLRLRRRLLLRRRLLLRRLLLRRRLLRLRLRLRRLLRRRLRRLRRRLRRLRRRLRLRRLRLRRRLRLRRRLRRLRRRLRLLLRLRRRLRLLRLRRLRRRLRRLRLRLRLRRLRRLLRLLLRLRLRRRLRRRLLRLLRLRRLRRRLRRLRRRLRLRRRR"
         i = Day08.parseInstructions $ cycle instructions
         m = Day08.parseMap content08
+        bTestInstr = "LR"
+        ib = Day08.parseInstructions $ cycle bTestInstr
+        mb = Day08.parseMap content08btest
+        startingNodesB = Day08.startingNodes mb
+        startingNodes = Day08.startingNodes m
   print $ "Day08 part 1: " ++ show (Day08.routeZZZ' m i 1 "AAA")
+  print $ "Day08 part 2: " ++ show (Day08.routeXXZ m i 1 startingNodes)
