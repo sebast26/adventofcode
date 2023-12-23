@@ -18,3 +18,11 @@ routeZZZ m = foldl (\(step, currentNode) command -> do
                             nextNode = command tup
                         if nextNode == "ZZZ" then (step, nextNode) else (step + 1, nextNode)
                     ) (1, "AAA")
+
+routeZZZ' :: Map.Map [Char] a -> [a -> [Char]] -> Int -> [Char] -> Int
+routeZZZ' m instList step currentNode
+    | nextNode == "ZZZ" = step
+    | otherwise = routeZZZ' m (tail instList) (step+1) nextNode
+    where   tup = m Map.! currentNode
+            command = head instList
+            nextNode = command tup
