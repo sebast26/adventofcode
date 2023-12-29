@@ -164,3 +164,11 @@ main = do
         prevNums = map Day09.findFirstInSequence lNums
     print $ "Day09 part 1: " ++ show (sum nextNums)
     print $ "Day09 part 2: " ++ show (sum prevNums)
+
+    test1content10 <- readFile "inputs/10test1.txt"
+    test2content10 <- readFile "inputs/10test2.txt"
+    let test1Map = lines test1content10
+        test2Map = lines test2content10
+    print $ test1Map
+    print $ test1Map !! 0
+    print $ test1Map !! 1
