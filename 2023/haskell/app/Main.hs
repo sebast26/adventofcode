@@ -148,6 +148,16 @@ main = do
                 ]
                 )
 
-    let inputTest1 = "0 3 6 9 12 15"
-        inputNumbers1 = map (\x -> read x::Int) $ words inputTest1
-    print $ "Day09 test1: " ++ show (Day09.findNextInSequence inputNumbers1)
+    let inputTest1 = map (\x -> read x::Int) $ words "0 3 6 9 12 15"
+        inputTest2 = map (\x -> read x::Int) $ words "1 3 6 10 15 21"
+        inputTest3 = map (\x -> read x::Int) $ words "10 13 16 21 30 45"
+        real1 = map (\x -> read x::Int) $ words "14 28 56 121 263 554 1131 2270 4549 9201 18855 39034 81081 167714 343319 692592 1373532 2674454 5110126 9579947 17622015"
+    print $ "Day09 test1: " ++ show (Day09.findNextInSequence inputTest1)
+    print $ "Day09 test2: " ++ show (Day09.findNextInSequence inputTest2)
+    print $ "Day09 test3: " ++ show (Day09.findNextInSequence inputTest3)
+    print $ "Day09 real1: " ++ show (Day09.findNextInSequence real1)
+    content09 <- readFile "inputs/09.txt"
+    let l = lines content09
+        lNums = map (map (\y -> read y::Int) . words) l
+        nums = map Day09.findNextInSequence lNums
+    print $ "Day09 part 1: " ++ show (sum nums)
