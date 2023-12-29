@@ -12,6 +12,7 @@ import Day07 (HandBid (bid), parseJLine)
 import qualified Day07 (parseLine)
 import qualified Day08 (parseInstructions, parseMap, routeXXZ, routeXXZ'', routeZZZ, routeZZZ', startingNodes)
 import GHC.Read (readField)
+import qualified Day09
 
 main :: IO ()
 main = do
@@ -146,3 +147,7 @@ main = do
                     Day08.routeXXZ'' m icycle 0 "SJA"
                 ]
                 )
+
+    let inputTest1 = "0 3 6 9 12 15"
+        inputNumbers1 = map (\x -> read x::Int) $ words inputTest1
+    print $ "Day09 test1: " ++ show (Day09.findNextInSequence inputNumbers1)
