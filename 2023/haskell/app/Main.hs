@@ -156,8 +156,11 @@ main = do
     print $ "Day09 test2: " ++ show (Day09.findNextInSequence inputTest2)
     print $ "Day09 test3: " ++ show (Day09.findNextInSequence inputTest3)
     print $ "Day09 real1: " ++ show (Day09.findNextInSequence real1)
+    print $ "Day09 test1, part2: " ++ show (Day09.findFirstInSequence inputTest1)
     content09 <- readFile "inputs/09.txt"
     let l = lines content09
         lNums = map (map (\y -> read y::Int) . words) l
-        nums = map Day09.findNextInSequence lNums
-    print $ "Day09 part 1: " ++ show (sum nums)
+        nextNums = map Day09.findNextInSequence lNums
+        prevNums = map Day09.findFirstInSequence lNums
+    print $ "Day09 part 1: " ++ show (sum nextNums)
+    print $ "Day09 part 2: " ++ show (sum prevNums)
