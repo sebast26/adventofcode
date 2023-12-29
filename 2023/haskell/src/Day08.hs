@@ -37,3 +37,11 @@ routeXXZ :: Num t => Map.Map [Char] b -> [b -> [Char]] -> t -> [[Char]] -> t
 routeXXZ m instList step nodes
     | endingNodes nodes = step
     | otherwise = routeXXZ m (tail instList) (step+1) $ map (head instList . (m Map.!)) nodes
+
+routeXXZ'' :: Num t => Map.Map [Char] a -> [a -> [Char]] -> t -> [Char] -> t
+routeXXZ'' m instList step currentNode
+    | last currentNode == 'Z' = step
+    | otherwise = routeXXZ'' m (tail instList) (step+1) nextNode
+    where   tup = m Map.! currentNode
+            command = head instList
+            nextNode = command tup

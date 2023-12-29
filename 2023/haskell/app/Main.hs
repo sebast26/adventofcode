@@ -11,7 +11,7 @@ import Data.Ix (Ix(range))
 import Data.List (foldl', foldl1', sort, intercalate)
 import Day07 (HandBid(bid), parseJLine)
 import GHC.Read (readField)
-import qualified Day08 ( parseInstructions, parseMap, routeZZZ, routeZZZ', startingNodes, routeXXZ )
+import qualified Day08 ( parseInstructions, parseMap, routeZZZ, routeZZZ', startingNodes, routeXXZ, routeXXZ'' )
 
 main :: IO ()
 main = do
@@ -112,12 +112,28 @@ main = do
   content08 <- readFile "inputs/08a"
   content08btest <- readFile "inputs/08btest"
   let   instructions = "LRLRRLRLRRRLRRRLRRLRLLRLRLRRRLRLRRLLRRLLRRRLLRRRLRRRLRRLLRLRRRLRRLRLRLLRRLLRRRLLRLRRRLRRRLLRLRRRLLRLLRRLRLRRRLLRLRLLRRRLLRLRRRLLLRRRLLLRRLLLRRRLLRLRLRLRRLLRRRLRRLRRRLRRLRRRLRLRRLRLRRRLRLRRRLRRLRRRLRLLLRLRRRLRLLRLRRLRRRLRRLRLRLRLRRLRRLLRLLLRLRLRRRLRRRLLRLLRLRRLRRRLRRLRRRLRLRRRR"
-        i = Day08.parseInstructions $ cycle instructions
+        i = Day08.parseInstructions $ take 15000000 (drop 235000000 (cycle instructions))
+        icycle = Day08.parseInstructions $ cycle instructions
         m = Day08.parseMap content08
         bTestInstr = "LR"
         ib = Day08.parseInstructions $ cycle bTestInstr
         mb = Day08.parseMap content08btest
         startingNodesB = Day08.startingNodes mb
         startingNodes = Day08.startingNodes m
-  print $ "Day08 part 1: " ++ show (Day08.routeZZZ' m i 1 "AAA")
-  print $ "Day08 part 2: " ++ show (Day08.routeXXZ m i 1 startingNodes)
+        nextNodes1 = ["NKN","CDF","VTS","LVQ","CBB","GRN"]
+  print $ "Day08 starting nodes: " ++ show startingNodes
+  print $ show (Day08.routeXXZ'' mb ib 0 "11A")
+  print $ show (Day08.routeXXZ'' mb ib 0 "22A")
+  print $ show (Day08.routeXXZ'' m icycle 0 "AAA")
+  print $ show (Day08.routeXXZ'' m icycle 0 "BXA")
+  print $ show (Day08.routeXXZ'' m icycle 0 "HCA")
+  print $ show (Day08.routeXXZ'' m icycle 0 "LDA")
+  print $ show (Day08.routeXXZ'' m icycle 0 "QTA")
+  print $ show (Day08.routeXXZ'' m icycle 0 "SJA")
+  print $ show (foldl lcm 1 [ Day08.routeXXZ'' m icycle 0 "AAA",
+                              Day08.routeXXZ'' m icycle 0 "BXA",
+                              Day08.routeXXZ'' m icycle 0 "HCA", 
+                              Day08.routeXXZ'' m icycle 0 "LDA",
+                              Day08.routeXXZ'' m icycle 0 "QTA",
+                              Day08.routeXXZ'' m icycle 0 "SJA"])
+  
