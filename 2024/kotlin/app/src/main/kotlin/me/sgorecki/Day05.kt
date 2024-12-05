@@ -5,7 +5,7 @@ import kotlin.math.floor
 
 data class PageUpdate(val rules: List<Pair<Int, Int>>, val update: List<Int>) {
     fun obeyRules(): Boolean {
-        return true
+        return false
     }
 
     fun middlePageNumber(): Int {
