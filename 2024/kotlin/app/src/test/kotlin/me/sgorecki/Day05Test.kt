@@ -2,6 +2,7 @@ package me.sgorecki
 
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import strikt.assertions.isFalse
 import strikt.assertions.isTrue
 
@@ -60,5 +61,26 @@ class Day05Test {
     @Test
     fun `should return false 3`() {
         expectThat(PageUpdate(rules, listOf(97, 13, 75, 29, 47)).inRightOrder()).isFalse()
+    }
+
+    @Test
+    fun `should fix update`() {
+        expectThat(PageUpdate(rules, listOf(75, 97, 47, 61, 53)).withFixedOrdering().update).isEqualTo(
+            listOf(97, 75, 47, 61, 53)
+        )
+    }
+
+    @Test
+    fun `should fix update 2`() {
+        expectThat(PageUpdate(rules, listOf(61, 13, 29)).withFixedOrdering().update).isEqualTo(
+            listOf(61, 29, 13)
+        )
+    }
+
+    @Test
+    fun `should fix update 3`() {
+        expectThat(PageUpdate(rules, listOf(97, 13, 75, 29, 47)).withFixedOrdering().update).isEqualTo(
+            listOf(97, 75, 47, 29, 13)
+        )
     }
 }
