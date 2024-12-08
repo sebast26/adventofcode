@@ -1,25 +1,28 @@
 package me.sgorecki
 
 import java.io.File
+import java.math.BigInteger
 
 val inputRegex = """(?<res>\d+):(?<nums>(?:\s+\d+)*)""".toRegex()
 
-data class Equation(val result: Int, val numbers: List<Int>)
+data class Equation(val result: BigInteger, val numbers: List<Int>)
 
 fun part1(input: List<String>): Int {
-    val equations = input.map { line ->
-        val (res, nums) = inputRegex.matchEntire(line)
-            ?.destructured
-            ?: throw IllegalArgumentException("Incorrect input line $line")
-        Equation(
-            result = res.toInt(),
-            numbers = nums.split(" ")
-                .filter { it != "" }
-                .map { it.toInt() }
-        )
-    }
+    val equations = parseEquations(input)
 
     return 0
+}
+
+private fun parseEquations(input: List<String>) = input.map { line ->
+    val (res, nums) = inputRegex.matchEntire(line)
+        ?.destructured
+        ?: throw IllegalArgumentException("Incorrect input line $line")
+    Equation(
+        result = res.toBigInteger(),
+        numbers = nums.split(" ")
+            .filter { it != "" }
+            .map { it.toInt() }
+    )
 }
 
 fun main() {
