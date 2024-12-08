@@ -47,6 +47,10 @@ fun part1(input: List<String>) = parseEquations(input)
     .filter { it.canBeCalculated() }
     .sumOf { it.expectedResult }
 
+fun part2(input: List<String>): BigInteger {
+    return 0.toBigInteger()
+}
+
 private fun parseEquations(input: List<String>) = input.map { line ->
     val (res, nums) = inputRegex.matchEntire(line)
         ?.destructured
@@ -62,6 +66,7 @@ private fun parseEquations(input: List<String>) = input.map { line ->
 fun main() {
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07sample.txt", 3749.toBigInteger())
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07.txt", 2437272016585.toBigInteger())
+    solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07sample.txt", 11387.toBigInteger())
 }
 
 private fun solve(resultFn: (List<String>) -> BigInteger, input: String, expected: BigInteger) {
