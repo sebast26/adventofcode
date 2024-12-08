@@ -78,7 +78,7 @@ fun main() {
     solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/05.txt", 4130)
 }
 
-fun solve(resultFn: (List<String>) -> Int, input: String, expected: Int) {
+private fun solve(resultFn: (List<String>) -> Int, input: String, expected: Int) {
     val lines = File(input).readLines()
     val actual = resultFn(lines)
     if (actual == expected) {
