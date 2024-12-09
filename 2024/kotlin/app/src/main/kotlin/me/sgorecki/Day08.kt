@@ -37,10 +37,24 @@ data class ResonantAntennas(val freq: Frequency, val locations: Set<Location>) {
     }.toSet()
 
     // TODO
-    fun harmonicsAntinodeLocations(maxX: Int, maxY: Int) = emptySet<Location>()
-
+    fun harmonicsAntinodeLocations(maxX: Int, maxY: Int) =
+        locationCombinations().flatMap { (one, two) ->
+            val locs = mutableSetOf<Location>()
+            val distOne = one.distance(two)
+            val distTwo = two.distance(one)
+            var temp = one.addDistance(distOne)
+            while (temp.withinBounds(maxX, maxY)) {
+                locs.add(temp)
+                temp = temp.addDistance(distOne)
+            }
+            temp = two.addDistance(distTwo)
+            while (temp.withinBounds(maxX, maxY)) {
+                locs.add(temp)
+                temp = temp.addDistance(distTwo)
+            }
+            setOf(locs)
+        }
 }
-
 
 fun main() {
     fun parseAntennas(input: List<String>): MutableSet<Antenna> {
@@ -70,18 +84,17 @@ fun main() {
     fun part2(input: List<String>): Int {
         val boundX = input[0].length
         val boundY = input.count()
-
         return parseAntennas(input)
             .groupBy { it.freq }
-            .asSequence()
             .map { ResonantAntennas(it.key, it.value.map { it.location }.toSet()) }
             .flatMap { it.harmonicsAntinodeLocations(boundX, boundY) }
-            .toSet().count()
+            .flatten().toSet().count()
     }
 
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/08sample.txt", 14)
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/08.txt", 244)
     solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/08sample.txt", 34)
+    solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/08.txt", 912)
 }
 
 private fun <E> solve(resultFn: (List<String>) -> E, input: String, expected: E) {
