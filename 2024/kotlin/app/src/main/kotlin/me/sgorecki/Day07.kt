@@ -3,6 +3,7 @@ package me.sgorecki
 import me.sgorecki.Operation.*
 import java.io.File
 import java.math.BigInteger
+import kotlin.math.pow
 
 val inputRegex = """(?<res>\d+):(?<nums>(?:\s+\d+)*)""".toRegex()
 
@@ -34,7 +35,7 @@ data class Equation(val expectedResult: BigInteger, val numbers: List<Int>) {
             return@foldIndexed when (ops[index - 1]) {
                 ADD -> acc + num.toBigInteger()
                 MUL -> acc * num.toBigInteger()
-                CON -> acc * (num.digits() * 10).toBigInteger() + num.toBigInteger()
+                CON -> acc * (10.toDouble().pow(num.digits())).toInt().toBigInteger() + num.toBigInteger()
             }
         }
     }
@@ -73,7 +74,7 @@ fun main() {
         2437272016585.toBigInteger()
     )
     solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07sample.txt", 11387.toBigInteger())
-    solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07.txt", 47281053829402.toBigInteger())
+    solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07.txt", 162987117690649.toBigInteger())
 }
 
 private fun solve(resultFn: (List<String>) -> BigInteger, input: String, expected: BigInteger) {
