@@ -36,6 +36,9 @@ data class ResonantAntennas(val freq: Frequency, val locations: Set<Location>) {
         setOf(antinodeOne, antinodeTwo)
     }.toSet()
 
+    // TODO
+    fun harmonicsAntinodeLocations(maxX: Int, maxY: Int) = emptySet<Location>()
+
 }
 
 
@@ -64,10 +67,21 @@ fun main() {
             .toSet().count()
     }
 
-    fun part2(input: List<String>) = 0
+    fun part2(input: List<String>): Int {
+        val boundX = input[0].length
+        val boundY = input.count()
+
+        return parseAntennas(input)
+            .groupBy { it.freq }
+            .asSequence()
+            .map { ResonantAntennas(it.key, it.value.map { it.location }.toSet()) }
+            .flatMap { it.harmonicsAntinodeLocations(boundX, boundY) }
+            .toSet().count()
+    }
 
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/08sample.txt", 14)
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/08.txt", 244)
+    solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/08sample.txt", 34)
 }
 
 private fun <E> solve(resultFn: (List<String>) -> E, input: String, expected: E) {
