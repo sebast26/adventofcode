@@ -34,12 +34,15 @@ data class Equation(val expectedResult: BigInteger, val numbers: List<Int>) {
             return@foldIndexed when (ops[index - 1]) {
                 ADD -> acc + num.toBigInteger()
                 MUL -> acc * num.toBigInteger()
-                CON -> acc
+                CON -> acc * (num.digits() * 10).toBigInteger() + num.toBigInteger()
             }
         }
     }
 
-    fun canBeCalculated(availableOps: List<Operation>) = operationPermute(availableOps).any { calculateResult(it) == expectedResult }
+    private fun Int.digits() = this.toString().length
+
+    fun canBeCalculated(availableOps: List<Operation>) =
+        operationPermute(availableOps).any { calculateResult(it) == expectedResult }
 }
 
 fun part1(input: List<String>) = parseEquations(input)
@@ -64,8 +67,13 @@ private fun parseEquations(input: List<String>) = input.map { line ->
 
 fun main() {
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07sample.txt", 3749.toBigInteger())
-    solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07.txt", 2437272016585.toBigInteger())
+    solve(
+        ::part1,
+        "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07.txt",
+        2437272016585.toBigInteger()
+    )
     solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07sample.txt", 11387.toBigInteger())
+    solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/07.txt", 47281053829402.toBigInteger())
 }
 
 private fun solve(resultFn: (List<String>) -> BigInteger, input: String, expected: BigInteger) {
