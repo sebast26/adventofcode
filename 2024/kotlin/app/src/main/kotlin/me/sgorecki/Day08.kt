@@ -66,6 +66,7 @@ fun main() {
     fun part2(input: List<String>) = 0
 
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/08sample.txt", 14)
+    solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/08.txt", 244)
 }
 
 private fun <E> solve(resultFn: (List<String>) -> E, input: String, expected: E) {
