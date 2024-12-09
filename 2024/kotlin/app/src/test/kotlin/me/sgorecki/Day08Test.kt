@@ -22,6 +22,16 @@ class Day08Test {
     }
 
     @Test
+    fun `location add distance`() {
+        // given
+        val loc = Location(4, 3)
+        val dist = Distance(1, 2)
+
+        // expect
+        expectThat(loc.addDistance(dist)).isEqualTo(Location(5, 5))
+    }
+
+    @Test
     fun `location combinations`() {
         // given
         val ra = ResonantAntennas(

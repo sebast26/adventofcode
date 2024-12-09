@@ -7,6 +7,13 @@ typealias Frequency = Char
 data class Distance(val x: Int, val y: Int)
 data class Location(val x: Int, val y: Int) {
     fun distance(other: Location) = Distance(other.x - x, other.y - y)
+    fun addDistance(distance: Distance): Location {
+        return Location(distance.x + x, distance.y + y)
+    }
+
+    fun withinBounds(maxX: Int, maxY: Int): Boolean {
+        return x < maxX && y < maxY && x >= 0 && y >= 0
+    }
 }
 
 data class Antenna(val freq: Frequency, val location: Location)
@@ -23,7 +30,12 @@ data class ResonantAntennas(val freq: Frequency, val locations: Set<Location>) {
         return combinations
     }
 
-    fun antinodePositions() = 0
+    fun antinodeLocations() = locationCombinations().flatMap { (one, two) ->
+        val antinodeOne = two.addDistance(one.distance(two))
+        val antinodeTwo = one.addDistance(two.distance(one))
+        setOf(antinodeOne, antinodeTwo)
+    }.toSet()
+
 }
 
 
@@ -41,12 +53,14 @@ fun main() {
     }
 
     fun part1(input: List<String>): Int {
-        val antennas = parseAntennas(input)
+        val boundX = input[0].length
+        val boundY = input.count()
+        return parseAntennas(input)
             .groupBy { it.freq }
             .map { ResonantAntennas(it.key, it.value.map { it.location }.toSet()) }
-//            .sumOf { it.antinodePositions() }
-
-        return 0
+            .flatMap { it.antinodeLocations() }
+            .filter { it.withinBounds(boundX, boundY) }
+            .toSet().count()
     }
 
     fun part2(input: List<String>) = 0
