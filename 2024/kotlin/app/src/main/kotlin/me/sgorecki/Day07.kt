@@ -1,29 +1,27 @@
 package me.sgorecki
 
-import me.sgorecki.Operation.ADD
-import me.sgorecki.Operation.MUL
+import me.sgorecki.Operation.*
 import java.io.File
 import java.math.BigInteger
 
 val inputRegex = """(?<res>\d+):(?<nums>(?:\s+\d+)*)""".toRegex()
 
 enum class Operation {
-    ADD, MUL
+    ADD, MUL, CON
 }
 
 data class Equation(val expectedResult: BigInteger, val numbers: List<Int>) {
     private val numberOfOperations = numbers.count() - 1
 
-    fun operationPermute(): List<List<Operation>> {
+    fun operationPermute(availableOps: List<Operation>): List<List<Operation>> {
         fun permute(temp: List<List<Operation>>, ops: List<Operation>): List<List<Operation>> {
             if (ops.count() == numberOfOperations) {
                 return temp + listOf(ops)
             }
-            val opsA = ops + ADD
-            val opsM = ops + MUL
-            val listA = permute(temp, opsA)
-            val listB = permute(temp, opsM)
-            return listA + listB
+            return availableOps.flatMap {
+                val newOps = ops + it
+                permute(temp, newOps)
+            }
         }
         return permute(emptyList(), emptyList())
     }
@@ -36,11 +34,12 @@ data class Equation(val expectedResult: BigInteger, val numbers: List<Int>) {
             return@foldIndexed when (ops[index - 1]) {
                 ADD -> acc + num.toBigInteger()
                 MUL -> acc * num.toBigInteger()
+                CON -> acc
             }
         }
     }
 
-    fun canBeCalculated() = operationPermute().any { calculateResult(it) == expectedResult }
+    fun canBeCalculated() = operationPermute(listOf(ADD, MUL)).any { calculateResult(it) == expectedResult }
 }
 
 fun part1(input: List<String>) = parseEquations(input)
