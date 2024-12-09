@@ -39,16 +39,16 @@ data class Equation(val expectedResult: BigInteger, val numbers: List<Int>) {
         }
     }
 
-    fun canBeCalculated() = operationPermute(listOf(ADD, MUL)).any { calculateResult(it) == expectedResult }
+    fun canBeCalculated(availableOps: List<Operation>) = operationPermute(availableOps).any { calculateResult(it) == expectedResult }
 }
 
 fun part1(input: List<String>) = parseEquations(input)
-    .filter { it.canBeCalculated() }
+    .filter { it.canBeCalculated(listOf(ADD, MUL)) }
     .sumOf { it.expectedResult }
 
-fun part2(input: List<String>): BigInteger {
-    return 0.toBigInteger()
-}
+fun part2(input: List<String>) = parseEquations(input)
+    .filter { it.canBeCalculated(listOf(ADD, MUL, CON)) }
+    .sumOf { it.expectedResult }
 
 private fun parseEquations(input: List<String>) = input.map { line ->
     val (res, nums) = inputRegex.matchEntire(line)
