@@ -57,6 +57,7 @@ fun main() {
         val boundY = input.count()
         return parseAntennas(input)
             .groupBy { it.freq }
+            .asSequence()
             .map { ResonantAntennas(it.key, it.value.map { it.location }.toSet()) }
             .flatMap { it.antinodeLocations() }
             .filter { it.withinBounds(boundX, boundY) }
