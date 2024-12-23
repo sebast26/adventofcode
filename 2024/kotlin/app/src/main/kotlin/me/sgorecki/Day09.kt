@@ -132,6 +132,7 @@ fun main() {
     }
 
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/09sample.txt", 1928.toBigInteger())
+    solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/09.txt", 6200294120911.toBigInteger())
 }
 
 private fun List<DiskFile>.checksum() =
