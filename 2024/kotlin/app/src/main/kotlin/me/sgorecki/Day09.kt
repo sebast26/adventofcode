@@ -12,25 +12,33 @@ enum class BlockType {
 sealed interface Block {
     val type: BlockType
     val size: Int
+    val wasMoved: Boolean
 
     fun move(): Block
 }
 
-data class DiskFile(val id: Int, override val size: Int) : Block {
+data class DiskFile(val id: Int, override val size: Int, override val wasMoved: Boolean = false) : Block {
     override val type = FileBlock
     override fun move() = if (size > 0) copy(size = size - 1) else FreeSpace(0)
 }
 
-data class FreeSpace(override val size: Int) : Block {
+data class FreeSpace(override val size: Int, override val wasMoved: Boolean = false) : Block {
     override val type = FreeSpaceBlock
     override fun move() = if (size > 0) copy(size = size - 1) else FreeSpace(0)
+    fun fit(block: DiskFile): List<Block> {
+        val blocks = mutableListOf<Block>(block.copy(wasMoved = true))
+        if (size > block.size) {
+            blocks.add(FreeSpace(size = size - block.size))
+        }
+        return blocks
+    }
 }
 
 data class DiskMap(val numbers: List<Int>) {
     private val blocks: List<Block>
 
     init {
-        blocks = toBlocks().also(::println)
+        blocks = toBlocks()
     }
 
     fun toBlocks() = numbers.mapIndexed { index, number ->
@@ -102,7 +110,35 @@ data class DiskMap(val numbers: List<Int>) {
 
         return defragBlocks
     }
+
+    fun defrag2(): List<Block> {
+        val defragBlocks = blocks.toMutableList()
+        for (position in defragBlocks.size - 1 downTo 0) {
+            val block = defragBlocks[position]
+            if (block is DiskFile && !block.wasMoved) {
+                val fitIdx = defragBlocks.findFirstFreeBlockThatFits(block.size)
+                if (fitIdx == -1 || position <= fitIdx) {
+                    continue
+                }
+
+                // relocate to new position
+                val space = defragBlocks[fitIdx] as FreeSpace
+                val newBlocks = space.fit(block)
+                defragBlocks.removeAt(fitIdx)
+                defragBlocks.addAll(fitIdx, newBlocks)
+
+                // replace original block with free space
+                val i = defragBlocks.indexOf(block)
+                defragBlocks.removeAt(i)
+                defragBlocks.add(i, FreeSpace(size = block.size))
+            }
+        }
+        return defragBlocks
+    }
 }
+
+private fun List<Block>.findFirstFreeBlockThatFits(size: Int) =
+    indexOfFirst { it.type == FreeSpaceBlock && it.size >= size }
 
 private fun Array<DiskFile?>.compress() = fold(mutableListOf<DiskFile>()) { acc, block ->
     if (acc.isEmpty()) {
@@ -123,26 +159,40 @@ fun main() {
     fun part1(input: List<String>): BigInteger {
         val numbers = input[0].map { it.digitToIntOrNull() ?: throw IllegalArgumentException("Unknown digit!") }
         val diskMap = DiskMap(numbers)
-        val defrag = diskMap.defrag().also(::println)
-        return defrag.checksum().first
+        val defrag = diskMap.defrag()
+        return defrag.checksum2().first
     }
 
     fun part2(input: List<String>): BigInteger {
-        return BigInteger.ZERO
+        val numbers = input[0].map { it.digitToIntOrNull() ?: throw IllegalArgumentException("Unknown digit!") }
+        val diskMap = DiskMap(numbers)
+        val defrag = diskMap.defrag2()
+        return defrag.checksum2().first
     }
 
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/09sample.txt", 1928.toBigInteger())
-    solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/09.txt", 6200294120911.toBigInteger())
+    solve(
+        ::part1,
+        "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/09.txt",
+        6200294120911.toBigInteger()
+    )
+    solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/09sample.txt", 2858.toBigInteger())
+    solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/09.txt", 6230529137840.toBigInteger())
 }
 
-private fun List<DiskFile>.checksum() =
-    fold(BigInteger.ZERO to 0) { (sum, idx), diskFile ->
-        var temp = BigInteger.ZERO
-        for (pos in idx..<idx + diskFile.size) {
-            temp = temp.plus(diskFile.id.toBigInteger().multiply(pos.toBigInteger()))
+private fun List<Block>.checksum2() =
+    fold(BigInteger.ZERO to 0) { (sum, idx), block ->
+        if (block is DiskFile) {
+            var temp = BigInteger.ZERO
+            for (pos in idx..<idx + block.size) {
+                temp = temp.plus(block.id.toBigInteger().multiply(pos.toBigInteger()))
+            }
+            sum.plus(temp) to idx + block.size
+        } else {
+            sum to idx + block.size
         }
-        sum.plus(temp) to idx + diskFile.size
     }
+
 
 private fun <E> solve(resultFn: (List<String>) -> E, input: String, expected: E) {
     val lines = File(input).readLines()
