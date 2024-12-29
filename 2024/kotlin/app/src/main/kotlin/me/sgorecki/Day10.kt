@@ -5,31 +5,33 @@ import java.math.BigInteger
 
 enum class DirectionDay10 {}
 
-fun main() {
-    data class Position(val x: Int, val y: Int)
-    data class Heigh(val value: Int, val pos: Position)
-    data class Grid(val heighs: Array<Array<Heigh>>)
+data class Coord(val x: Int, val y: Int)
+data class High(val value: Int, val pos: Coord)
+data class GridHeighs(val highs: Array<Array<High>>, val tailHeads: List<Coord>)
 
-    fun parseGrid(input: List<String>): Pair<Grid, List<Position>> {
-        val tailHeads = mutableListOf<Position>()
-        val grid = Array(input.size) { Array(0) { Heigh(-1, Position(-1, -1)) } }
+fun main() {
+
+
+    fun parseGrid(input: List<String>): GridHeighs {
+        val tailHeads = mutableListOf<Coord>()
+        val grid = Array(input.size) { Array(0) { High(-1, Coord(-1, -1)) } }
         input.forEachIndexed { idx, row ->
-            val rowA = Array(row.length) { Heigh(-1, Position(-1, -1)) }
+            val rowA = Array(row.length) { High(-1, Coord(-1, -1)) }
             row.forEachIndexed { rowIdx, c ->
-                val pos = Position(rowIdx, idx)
+                val coord = Coord(rowIdx, idx)
                 val value = c.digitToInt()
                 if (c == '0') {
-                    tailHeads.add(pos)
+                    tailHeads.add(coord)
                 }
-                rowA[rowIdx] = Heigh(value, pos)
+                rowA[rowIdx] = High(value, coord)
             }
             grid[idx] = rowA
         }
-        return Grid(grid) to tailHeads
+        return GridHeighs(grid, tailHeads)
     }
 
     fun part1(input: List<String>): BigInteger? {
-        val (grid, tailHeads) = parseGrid(input)
+        val grid = parseGrid(input)
 
         return BigInteger.ZERO
     }
