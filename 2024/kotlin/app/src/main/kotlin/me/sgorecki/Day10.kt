@@ -16,13 +16,18 @@ private operator fun Coord.plus(direction: DirectionDay10) = Coord(this.x + dire
 
 data class High(val value: Int, val pos: Coord)
 data class TrailHead(val pos: Coord)
-data class Top(val pos: Coord)
+data class Trail(val steps: Set<Coord>)
 data class GridHeighs(val highs: Array<Array<High>>, val trailHeads: List<TrailHead>) {
 
     fun score() = trailHeads.sumOf { findTops(it).count() }
+    fun scoreTrails() = trailHeads.sumOf { findTopTrails(it).count() }
 
     fun findTops(head: TrailHead): Set<Coord> {
         return findTop(High(0, head.pos))
+    }
+
+    fun findTopTrails(head: TrailHead): Set<Trail> {
+        return findTopTrail(High(0, head.pos), Trail(emptySet()))
     }
 
     private fun findTop(high: High): Set<Coord> {
@@ -43,6 +48,26 @@ data class GridHeighs(val highs: Array<Array<High>>, val trailHeads: List<TrailH
         return tops
     }
 
+    private fun findTopTrail(high: High, trail: Trail): Set<Trail> {
+        val current = trail.copy(steps = trail.steps + high.pos)
+        if (high.value == 9) {
+            return setOf(current)
+        }
+
+        val possibleTop = getHigh(high.pos + DirectionDay10.UP)
+        val possibleBottom = getHigh(high.pos + DirectionDay10.DOWN)
+        val possibleLeft = getHigh(high.pos + DirectionDay10.LEFT)
+        val possibleRight = getHigh(high.pos + DirectionDay10.RIGHT)
+
+        val trails = mutableSetOf<Trail>()
+        if (possibleTop != null && possibleTop.value == high.value + 1) trails += findTopTrail(possibleTop, current)
+        if (possibleBottom != null && possibleBottom.value == high.value + 1) trails += findTopTrail(possibleBottom, current)
+        if (possibleLeft != null && possibleLeft.value == high.value + 1) trails += findTopTrail(possibleLeft, current)
+        if (possibleRight != null && possibleRight.value == high.value + 1) trails += findTopTrail(possibleRight, current)
+
+        return trails
+    }
+
     private fun inGrid(coord: Coord): Boolean {
         if (coord.x < 0 || coord.x >= highs.first().size) return false
         if (coord.y < 0 || coord.y >= highs.size) return false
@@ -57,8 +82,6 @@ data class GridHeighs(val highs: Array<Array<High>>, val trailHeads: List<TrailH
 }
 
 fun main() {
-
-
     fun parseGrid(input: List<String>): GridHeighs {
         val trailHeads = mutableListOf<TrailHead>()
         val grid = Array(input.size) { Array(0) { High(-1, Coord(-1, -1)) } }
@@ -77,16 +100,20 @@ fun main() {
         return GridHeighs(grid, trailHeads)
     }
 
-    fun part1(input: List<String>): BigInteger? {
+    fun part1(input: List<String>): BigInteger {
         val grid = parseGrid(input)
-
         return grid.score().toBigInteger()
     }
 
-    fun part2(input: List<String>) = BigInteger.ZERO
+    fun part2(input: List<String>): BigInteger {
+        val grid = parseGrid(input)
+        return grid.scoreTrails().toBigInteger()
+    }
 
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/10sample.txt", 36.toBigInteger())
     solve(::part1, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/10.txt", 472.toBigInteger())
+    solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/10sample.txt", 81.toBigInteger())
+    solve(::part2, "/Users/seba/projects/priv/code/adventofcode/2024/kotlin/inputs/10.txt", 969.toBigInteger())
 }
 
 private fun <E> solve(resultFn: (List<String>) -> E, input: String, expected: E) {
