@@ -151,4 +151,23 @@ class Day11Test {
         expectThat(actual).hasSize(22)
     }
 
+    @Test
+    fun `part2 - works for 1st blink`() {
+        expectThat(part2Test(listOf("125 17"), 1)).isEqualTo(3L)
+    }
+
+    @Test
+    fun `part2 - works for 2nd blink`() {
+        expectThat(part2Test(listOf("253000 1 7"), 1)).isEqualTo(4L)
+    }
+
+    @Test
+    fun `part2 - works for 6th blink`() {
+        expectThat(part2Test(listOf("1036288 7 2 20 24 4048 1 4048 8096 28 67 60 32"), 1)).isEqualTo(22L)
+    }
+
+    @Test
+    fun `part2 - works for 6th blink from 1st iteration`() {
+        expectThat(part2Test(listOf("125 17"), 6)).isEqualTo(22L)
+    }
 }
