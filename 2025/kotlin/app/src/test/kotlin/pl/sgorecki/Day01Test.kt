@@ -6,22 +6,25 @@ import org.junit.jupiter.api.Test
 class Day01Test {
 
     @Test
-    fun `rotate right - finish on zero`() {
-        assertEquals(1, day01part02(listOf("R50")))
+    fun `passZero for right rotator`() {
+        assertEquals(0, RightRotator(40).zeroPassesFrom(40))
+        assertEquals(1, RightRotator(50).zeroPassesFrom(50))
+        assertEquals(1, RightRotator(40).zeroPassesFrom(80))
+        assertEquals(2, RightRotator(230).zeroPassesFrom(50))
+        assertEquals(0, RightRotator(50).zeroPassesFrom(49))
+        assertEquals(1, RightRotator(149).zeroPassesFrom(50))
+        assertEquals(4, RightRotator(400).zeroPassesFrom(99))
     }
 
     @Test
-    fun `R150 - finish on zero`() {
-        assertEquals(2, day01part02(listOf("R150")))
-    }
-
-    @Test
-    fun `L50 - finish on zero`() {
-        assertEquals(1, day01part02(listOf("L50")))
-    }
-
-    @Test
-    fun `L150 - finish on zero`() {
-        assertEquals(2, day01part02(listOf("L150")))
+    fun `passZero for left rotator`() {
+        assertEquals(0, LeftRotator(40).zeroPassesFrom(50))
+        assertEquals(1, LeftRotator(60).zeroPassesFrom(50))
+        assertEquals(1, LeftRotator(50).zeroPassesFrom(50))
+        assertEquals(2, LeftRotator(230).zeroPassesFrom(50))
+        assertEquals(0, LeftRotator(49).zeroPassesFrom(50))
+        assertEquals(1, LeftRotator(50).zeroPassesFrom(49))
+        assertEquals(4, LeftRotator(400).zeroPassesFrom(99))
+        assertEquals(0, LeftRotator(5).zeroPassesFrom(0))
     }
 }

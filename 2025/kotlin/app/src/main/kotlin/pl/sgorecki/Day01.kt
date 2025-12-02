@@ -7,18 +7,29 @@ import kotlin.math.floor
 
 sealed interface Rotator {
     fun rotateFrom(initialValue: Int): Int
+    fun zeroPassesFrom(initialValue: Int): Int
 }
 
 data class LeftRotator(val value: Int) : Rotator {
     override fun rotateFrom(initialValue: Int): Int {
-        val temp = (initialValue - value) % 100
-        return if (temp < 0) temp + 100 else temp
+        return (initialValue - value).mod(100)
+    }
+
+    override fun zeroPassesFrom(initialValue: Int): Int {
+        val temp = (initialValue - value)
+        var count = 0
+        if (temp <= 0 && initialValue != 0) count++
+        return count + abs((initialValue - value) / 100)
     }
 }
 
 data class RightRotator(val value: Int) : Rotator {
     override fun rotateFrom(initialValue: Int): Int {
-        return (initialValue + value) % 100
+        return (initialValue + value).mod(100)
+    }
+
+    override fun zeroPassesFrom(initialValue: Int): Int {
+        return (initialValue + value) / 100
     }
 }
 
@@ -41,32 +52,22 @@ fun main() {
     solve(::part01, "/Users/seba/code/adventofcode/2025/kotlin/inputs/01sample.txt", 3)
     solve(::part01, "/Users/seba/code/adventofcode/2025/kotlin/inputs/01.txt", 1102)
     solve(::day01part02, "/Users/seba/code/adventofcode/2025/kotlin/inputs/01sample.txt", 6)
-    solve(::day01part02, "/Users/seba/code/adventofcode/2025/kotlin/inputs/01.txt", 6)
+    solve(::day01part02, "/Users/seba/code/adventofcode/2025/kotlin/inputs/01.txt", 6175)
 }
 
 fun day01part02(input: List<String>): Int {
     var current = 50
     var zeroPoint = 0
-    input
-        .map { rotation ->
-            if (rotation.startsWith('L')) {
-                val n = rotation.substringAfter('L').toInt()
-                if ((current - n) % 100 == 0) zeroPoint++
-                val temp = abs(floor((current - n) / 100.0).toInt())
-                zeroPoint += temp.toInt()
-                var newCurrent = (current - n) % 100
-                if (newCurrent < 0) {
-                    newCurrent += 100
-                }
-                current = newCurrent
-            } else {
-                val n = rotation.substringAfter('R').toInt()
-                val temp = floor((current + n) / 100.0)
-                zeroPoint += temp.toInt()
-                current = (current + n) % 100
-            }
-//                if (current == 0) zeroPoint++
+    input.map { command ->
+        val n = command.substring(1).toInt()
+        if (command.startsWith('L')) {
+            zeroPoint += LeftRotator(n).zeroPassesFrom(current)
+            current = LeftRotator(n).rotateFrom(current)
+        } else {
+            zeroPoint += RightRotator(n).zeroPassesFrom(current)
+            current = RightRotator(n).rotateFrom(current)
         }
+    }
     return zeroPoint
 }
 
