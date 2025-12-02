@@ -4,48 +4,37 @@ import java.io.File
 import kotlin.math.abs
 import kotlin.math.floor
 
+
 sealed interface Rotator {
-    fun rotate(amount: Int): Int
+    fun rotateFrom(initialValue: Int): Int
 }
 
-data class LeftRotator(val initial: Int): Rotator {
-    override fun rotate(amount: Int): Int {
-        TODO("Not yet implemented")
+data class LeftRotator(val value: Int) : Rotator {
+    override fun rotateFrom(initialValue: Int): Int {
+        val temp = (initialValue - value) % 100
+        return if (temp < 0) temp + 100 else temp
     }
 }
 
-data class RightRotator(val initial: Int): Rotator {
-    override fun rotate(amount: Int): Int {
-        TODO("Not yet implemented")
+data class RightRotator(val value: Int) : Rotator {
+    override fun rotateFrom(initialValue: Int): Int {
+        return (initialValue + value) % 100
     }
-
 }
+
+
 fun main() {
     fun part01(input: List<String>): Int {
         var current = 50
-        input.map { command ->
+        return input.map { command ->
+            val n = command.substring(1).toInt()
             if (command.startsWith('L')) {
-                val n = command.substringAfter('L').toInt()
-                current = LeftRotator(current).rotate(n)
+                current = LeftRotator(n).rotateFrom(current)
             } else {
-                val n = command.substringAfter('R').toInt()
-                current = RightRotator(current).rotate(n)
+                current = RightRotator(n).rotateFrom(current)
             }
             current
         }.count { it == 0 }
-        return input
-            .map { rotation ->
-                if (rotation.startsWith('L')) {
-                    val n = rotation.substringAfter('L').toInt()
-                    var newCurrent = (current - n) % 100
-                    if (newCurrent < 0) newCurrent += 100
-                    current = newCurrent
-                } else {
-                    val n = rotation.substringAfter('R').toInt()
-                    current = (current + n) % 100
-                }
-                current
-            }.count { it == 0 }
     }
 
 
