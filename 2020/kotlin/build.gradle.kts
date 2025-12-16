@@ -9,17 +9,18 @@ repositories {
 
 application {}
 
-
 fileTree("src/main/kotlin") {
     include("**/Day*.kt")
 }.forEach { file ->
     val base = file.nameWithoutExtension
-    val className = "${base}Kt"
 
     tasks.register<JavaExec>("run$base") {
         group = "application"
-        mainClass.set("pl.sgorecki.${base.lowercase()}.$className")
+        mainClass.set("pl.sgorecki.${base.lowercase()}.${base}Kt")
         classpath = sourceSets["main"].runtimeClasspath
     }
 }
 
+tasks.withType<JavaExec>().configureEach {
+    systemProperty("projectDir", project.projectDir.absolutePath)
+}
